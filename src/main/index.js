@@ -41,12 +41,12 @@ let subWindow;
 ipcMain.on('newWindow',(event,payload)=>{
     subWindow = new BrowserWindow({
         height: 400,
-        width: 800,
-        // useContentSize: true,
+        width: 400,
+        useContentSize: true,
         show: false,
-        // autoHideMenuBar:true,
-        // frame: false, // 这样子窗口有头部 可以关闭和放大 缩小
-        parent: mainWindow
+        autoHideMenuBar:true,
+        // // frame: false, // 这样子窗口有头部 可以关闭和放大 缩小
+        // parent: mainWindow
     })
     // console.log(winURL+"/#/sub") //开发和构件时路由方式不同，不能用这个
     subWindow.loadURL(winURL);
@@ -58,18 +58,8 @@ ipcMain.on('newWindow',(event,payload)=>{
         subWindosMaps[payload.id] = subWindow;
     })
 
-    // 子窗口挂载了
-    ipcMain.on('sub-ready', () => {
-        console.log('sub-ready',payload);
-        subWindow.send('msg',payload);
-    })
-
     subWindow.on('focus', () => {
-        for(var key in subWindosMaps){
-            let subWin = subWindosMaps[key];
-            subWin.setAlwaysOnTop(false);
-        }
-        subWindow.setAlwaysOnTop(true);
+        
     })
 
     subWindow.on('closed', () => {
@@ -81,6 +71,14 @@ ipcMain.on('newWindow',(event,payload)=>{
     })
 })
 
+ // 子窗口挂载了
+ ipcMain.on('sub-ready', (event,id) => {
+     console.log(id)
+    if(subWindosMaps[id]){
+        subWindosMaps[id].send('main-to-sub','id为'+id+'的子页面载入了')
+    }
+})
+
 // 子窗口的消息监听
 ipcMain.on('sub-to-main',(a,b)=>{
     // process的 console是在 控制台里
@@ -88,14 +86,21 @@ ipcMain.on('sub-to-main',(a,b)=>{
     mainWindow.send('sub-to-main',b);
 })
 
-ipcMain.on('main-to-sub',(a,b)=>{
-    console.log(b);
-    for(var key in subWindosMaps){
-      let subWin = subWindosMaps[key];
-      if(subWin){
-          subWin.send && subWin.send('main-to-sub',b);
-      }
+ipcMain.on('main-to-sub',(a,payload)=>{
+    if(payload.id!==undefined){
+        let subWin = subWindosMaps[payload.id];
+        if(subWin){
+            subWin.send && subWin.send('main-to-sub',payload);
+        }
+    }else{
+        for(var key in subWindosMaps){
+            let subWin = subWindosMaps[key];
+            if(subWin){
+                subWin.send && subWin.send('main-to-sub',payload);
+            }
+        }
     }
+    
 })
 
 
