@@ -74,7 +74,7 @@ ipcMain.on('newWindow',(event,payload)=>{
 
     subWindow.on('closed', () => {
         // 注销所有事件监听
-        subWindow = null;
+        subWindow.destroy();
         mainWindow.send('subwindow-closed',{...payload,msg:"这是子窗口关闭时发来的消息"});
         delete subWindosMaps[payload.id]
         console.log('closed' + payload.id)

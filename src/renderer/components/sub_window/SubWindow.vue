@@ -55,7 +55,8 @@
             console.log("main-to-sub")
             console.log(payload)
             this.data = payload
-            window.Toast(`"main-to-sub：发来了数据:${JSON.stringify(payload)}`);
+            // window.Toast(`"main-to-sub：发来了数据:${JSON.stringify(payload)}`);
+            this.$message(`"main-to-sub：发来了数据:${JSON.stringify(payload)}`);
         });
         
         let id = this.$route.params.id;

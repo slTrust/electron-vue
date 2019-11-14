@@ -1,18 +1,39 @@
 <template>
   <div id="wrapper">
-      <!-- <div class="toastWrapper">
-          <div class="content">ddd</div>
-        </div> -->
-    <h2>主页面</h2>
+    
+    <!-- <h2>主页面</h2>
     <li v-for="item in stockList">
-      <button @click="newWindow(item)" :disabled="item.state">{{item.code}}新窗口</button>
-      <!-- <button @click="sendMsg($event,item.code)">单独给{{item.code}}窗口发消息</button> -->
-      <button @click="sendMsg(item.code)" :disabled="!item.state">单独给{{item.code}}窗口发消息</button>
-
-    </li>
-    主页面发广播
-    <button @click="sendMsg(null)">发所有子窗口发消息</button>
-
+      <el-button type="primary" @click="newWindow(item)" :disabled="item.state">{{item.code}}新窗口</el-button>
+      <el-button @click="sendMsg(item.code)" :disabled="!item.state">单独给{{item.code}}窗口发消息</el-button>
+    </li> -->
+    <el-table
+      :data="stockList"
+      style="width: 100%">
+      <el-table-column
+        prop="code"
+        label="股票代码"
+        width="180">
+      </el-table-column>
+      <el-table-column
+        prop="state"
+        label="操作">
+         <template slot-scope="scope">
+            <el-button
+                size="mini"
+                type="danger"
+                @click="newWindow(scope.row)" :disabled="scope.row.state">新开窗口
+            </el-button>
+            <el-button
+                size="mini"
+                type="primary"
+                @click="sendMsg(scope.row.code)" :disabled="!scope.row.state">单独给{{scope.row.code}}窗口发消息
+            </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    
+    <el-button @click="sendMsg(null)">主页面给所有子窗口发消息</el-button>
+    <hr>
     系统信息
     <system-information></system-information>
   </div>
@@ -62,6 +83,8 @@
             let item = this.stockList.filter(item=>item.code===code)[0];
             item.state = false;
             window.Toast(`子窗口${code} 关闭了，恢复开启子窗口状态`);
+            this.$message
+            this.$message(`子窗口${code} 关闭了，恢复开启子窗口状态`);
         })
 
         this.$electron.ipcRenderer.on('router',(event,path)=>{
@@ -70,7 +93,8 @@
 
         this.$electron.ipcRenderer.on('sub-to-main',(event,msg)=>{
             console.log(msg);
-            window.Toast(`子窗口：发来了msg:${JSON.stringify(msg)}`);
+            // window.Toast(`子窗口：发来了msg:${JSON.stringify(msg)}`);
+            this.$message(`子窗口：发来了msg:${JSON.stringify(msg)}`);
         })
     }
   }
