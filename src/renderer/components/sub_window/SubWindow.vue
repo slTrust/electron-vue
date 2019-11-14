@@ -50,14 +50,16 @@
         }
     },
     mounted() {
-        let id = this.$route.params.id;
-        this.$electron.ipcRenderer.send('sub-to-main',{id,msg:"子窗口已经开启！"});
+        
         this.$electron.ipcRenderer.on('main-to-sub',(event,payload)=>{
             console.log("main-to-sub")
             console.log(payload)
             this.data = payload
-            alert(`"main-to-sub：发来了数据:${JSON.stringify(payload)}`);
+            window.Toast(`"main-to-sub：发来了数据:${JSON.stringify(payload)}`);
         });
+        
+        let id = this.$route.params.id;
+        this.$electron.ipcRenderer.send('sub-to-main',{id,msg:"子窗口已经开启！"});
     }
   }
 </script>

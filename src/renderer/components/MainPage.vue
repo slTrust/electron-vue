@@ -1,5 +1,8 @@
 <template>
   <div id="wrapper">
+      <!-- <div class="toastWrapper">
+          <div class="content">ddd</div>
+        </div> -->
     <h2>主页面</h2>
     <li v-for="item in stockList">
       <button @click="newWindow(item)" :disabled="item.state">{{item.code}}新窗口</button>
@@ -58,7 +61,7 @@
             let code = payload.id;
             let item = this.stockList.filter(item=>item.code===code)[0];
             item.state = false;
-            alert(`子窗口${code} 关闭了，恢复开启子窗口状态`);
+            window.Toast(`子窗口${code} 关闭了，恢复开启子窗口状态`);
         })
 
         this.$electron.ipcRenderer.on('router',(event,path)=>{
@@ -67,7 +70,7 @@
 
         this.$electron.ipcRenderer.on('sub-to-main',(event,msg)=>{
             console.log(msg);
-            alert(`子窗口：发来了msg:${JSON.stringify(msg)}`);
+            window.Toast(`子窗口：发来了msg:${JSON.stringify(msg)}`);
         })
     }
   }

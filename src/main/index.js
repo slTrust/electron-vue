@@ -61,9 +61,9 @@ ipcMain.on('newWindow',(event,payload)=>{
     // console.log(winURL+"/#/sub") //开发和构件时路由方式不同，不能用这个
     subWindow.loadURL(winURL);
     subWindow.on('ready-to-show',()=>{
-        subWindow.show();
         subWindow.setTitle(payload.id)
         subWindow.send('router',{path:'/sub'+'/'+payload.id});
+        subWindow.show();
         // 缓存这个 subWindow到map里
         subWindosMaps[payload.id] = subWindow;
     })
