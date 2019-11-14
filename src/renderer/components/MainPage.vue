@@ -19,7 +19,7 @@
   import SystemInformation from './LandingPage/SystemInformation'
 
   export default {
-    name: 'landing-page',
+    name: 'main-page',
     components: { SystemInformation },
     data(){
       return {
@@ -58,6 +58,7 @@
             let code = payload.id;
             let item = this.stockList.filter(item=>item.code===code)[0];
             item.state = false;
+            alert(`子窗口${code} 关闭了，恢复开启子窗口状态`);
         })
 
         this.$electron.ipcRenderer.on('router',(event,path)=>{
@@ -66,6 +67,7 @@
 
         this.$electron.ipcRenderer.on('sub-to-main',(event,msg)=>{
             console.log(msg);
+            alert(`子窗口：发来了msg:${JSON.stringify(msg)}`);
         })
     }
   }

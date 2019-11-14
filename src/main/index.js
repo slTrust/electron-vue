@@ -9,7 +9,11 @@ if (process.env.NODE_ENV !== 'development') {
 console.log(BrowserWindow)
 
 Menu.setApplicationMenu(null);
-let mainWindow
+
+let mainWindow;
+let subWindosMaps = {};
+let subWindow;
+
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
@@ -32,12 +36,18 @@ function createWindow () {
     mainWindow.show();
     // mainWindow.send('router',{path:'/entry'});
   })
-  mainWindow.on('closed', () => {
-    mainWindow = null
-  })
+
+    // 主窗口要关闭的时候 关闭所有未关闭的子窗口
+    mainWindow.on('close',(a,b)=>{
+        console.log("close 事件")
+        for(var key in subWindosMaps){
+            let subWin = subWindosMaps[key];
+            subWin && subWin.destroy();
+        }
+        mainWindow = null
+    })
 }
-let subWindosMaps = {};
-let subWindow;
+
 ipcMain.on('newWindow',(event,payload)=>{
     subWindow = new BrowserWindow({
         height: 400,
@@ -71,20 +81,14 @@ ipcMain.on('newWindow',(event,payload)=>{
     })
 })
 
- // 子窗口挂载了
- ipcMain.on('sub-ready', (event,id) => {
-     console.log(id)
-    if(subWindosMaps[id]){
-        subWindosMaps[id].send('main-to-sub','id为'+id+'的子页面载入了')
-    }
-})
-
 // 子窗口的消息监听
 ipcMain.on('sub-to-main',(a,b)=>{
     // process的 console是在 控制台里
     console.log(b);
     mainWindow.send('sub-to-main',b);
 })
+
+
 
 ipcMain.on('main-to-sub',(a,payload)=>{
     if(payload.id!==undefined){

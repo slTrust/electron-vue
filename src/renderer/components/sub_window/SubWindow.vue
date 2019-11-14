@@ -2,7 +2,7 @@
   <div id="wrapper"  style="-webkit-app-region: drag">
     <h2>子窗口</h2>
     <div style="border:1px solid red;">
-      <strong>来自主页面的信息</strong>
+      <strong>主页面传递的信息</strong>
       <br>
       id:{{id}}
       <br>
@@ -10,8 +10,6 @@
       <button @click="sendMsg">发消息</button>
       <br>
       收到的消息：{{data}}
-      <hr>
-      <button @click="goToMain">main</button>
     </div>
 
     <system-information/>
@@ -53,11 +51,12 @@
     },
     mounted() {
         let id = this.$route.params.id;
-        this.$electron.ipcRenderer.send('sub-ready',id);
+        this.$electron.ipcRenderer.send('sub-to-main',{id,msg:"子窗口已经开启！"});
         this.$electron.ipcRenderer.on('main-to-sub',(event,payload)=>{
             console.log("main-to-sub")
             console.log(payload)
             this.data = payload
+            alert(`"main-to-sub：发来了数据:${JSON.stringify(payload)}`);
         });
     }
   }

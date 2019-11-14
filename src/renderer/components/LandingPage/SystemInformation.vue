@@ -10,7 +10,7 @@
         <div class="name">Route Name:</div>
         <div class="value">{{ name }}</div>
       </div>
-      <div class="item">
+      <!-- <div class="item">
         <div class="name">Vue.js:</div>
         <div class="value">{{ vue }}</div>
       </div>
@@ -25,7 +25,7 @@
       <div class="item">
         <div class="name">Platform:</div>
         <div class="value">{{ platform }}</div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
