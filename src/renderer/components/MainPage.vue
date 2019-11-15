@@ -65,10 +65,6 @@
             }
             this.$electron.ipcRenderer.send('main-to-sub',payload)
         },
-        open (link) {
-            this.$router
-            this.$electron.shell.openExternal(link)
-        },
         newWindow(stock){
             stock.state = true;
             this.$electron.ipcRenderer.send('newWindow',{id:stock.code,msg:'这是来自主窗口的信息'})
@@ -85,10 +81,6 @@
             window.Toast(`子窗口${code} 关闭了，恢复开启子窗口状态`);
             this.$message
             this.$message(`子窗口${code} 关闭了，恢复开启子窗口状态`);
-        })
-
-        this.$electron.ipcRenderer.on('router',(event,path)=>{
-            this.$router.replace(path)
         })
 
         this.$electron.ipcRenderer.on('sub-to-main',(event,msg)=>{

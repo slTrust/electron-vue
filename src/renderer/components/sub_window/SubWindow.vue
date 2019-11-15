@@ -30,9 +30,6 @@
       }
     },
     methods: {
-        goToMain(){
-          this.$router.replace({path:'/'})
-        },
         sendMsg(){
             this.$electron.ipcRenderer.send('sub-to-main',{id:this.id,msg:'子页面'+this.id+'的msg'});
         },

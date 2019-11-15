@@ -54,15 +54,20 @@ ipcMain.on('newWindow',(event,payload)=>{
         width: 400,
         useContentSize: true,
         show: false,
+        title:payload.id,
         autoHideMenuBar:true,
         // // frame: false, // 这样子窗口有头部 可以关闭和放大 缩小
         // parent: mainWindow
     })
     // console.log(winURL+"/#/sub") //开发和构件时路由方式不同，不能用这个
-    subWindow.loadURL(winURL);
+    const modalPath = process.env.NODE_ENV === 'development'
+    ? 'http://localhost:9080/#/sub/' + payload.id
+    : `file://${__dirname}/index.html#sub/${payload.id}`
+    subWindow.loadURL(modalPath);
+    
+   
     subWindow.on('ready-to-show',()=>{
         subWindow.setTitle(payload.id)
-        subWindow.send('router',{path:'/sub'+'/'+payload.id});
         subWindow.show();
         // 缓存这个 subWindow到map里
         subWindosMaps[payload.id] = subWindow;
